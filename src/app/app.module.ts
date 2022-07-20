@@ -7,18 +7,24 @@ import { AppComponent } from './app.component';
 import { PagesModule } from './pages/pages.module';
 import { NopagefoundComponent } from './nopagefound/nopagefound.component';
 import { AuthModule } from './auth/auth.module';
+import {HttpClientModule} from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NopagefoundComponent,
 
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     PagesModule,
-    AuthModule
+    AuthModule,
+    HttpClientModule
+  
+
 
   ],
   bootstrap: [AppComponent]
