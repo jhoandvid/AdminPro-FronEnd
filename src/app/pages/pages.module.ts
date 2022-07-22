@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { ComponentsModule } from '../components/components.module';
 
 import { NgChartsModule } from 'ng2-charts';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 
 
@@ -22,7 +23,8 @@ import { NgChartsModule } from 'ng2-charts';
     DashboardComponent,
     Grafica1Component,
     ProgressComponent,
-    PagesComponent
+    PagesComponent,
+    AccountSettingsComponent
 
 
   ],
@@ -40,6 +42,7 @@ import { NgChartsModule } from 'ng2-charts';
     Grafica1Component,
     ProgressComponent,
     PagesComponent,
+    AccountSettingsComponent
     
 
   ]

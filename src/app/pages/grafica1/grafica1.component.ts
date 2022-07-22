@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, SimpleChanges } from '@angular/core';
 import { ChartData,  ChartType, } from 'chart.js';
-import { ServiceService } from 'src/app/service/service.service';
+
 
 @Component({
   selector: 'app-grafica1',
@@ -16,7 +16,7 @@ export class Grafica1Component implements OnInit {
   datas: ChartData<'doughnut'> = {
     labels: this.labels,
     datasets: [
-      { data: this.baseDatsos,
+      { data: [22*2,4,5],
         backgroundColor: [ '#6857E6', '#009FEE', '#F02059' ],
         //hoverBackgroundColor: [ '#6857E6', '#009FEE', '#F02059' ]
       }
@@ -27,20 +27,9 @@ export class Grafica1Component implements OnInit {
 
 
 
-  constructor(private service:ServiceService) {
+  constructor() {
 
-    this.service.getDatosEmpresa().subscribe(({labels,values})=>{
-
-     this.datas={
-      labels:labels,
-      datasets:[{data:values}]
-     }
-     
-    
-    
- 
- 
-  })
+   
 
    }
  
