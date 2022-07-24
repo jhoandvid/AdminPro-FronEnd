@@ -12,19 +12,12 @@ declare function  customInitFunctions():void;
 })
 export class PagesComponent implements OnInit {
 
-  
- 
-
-  
-
   constructor(private settingsService:SettingsService) { }
-
-  ngOnInit(): void {
-
-    customInitFunctions();
   
+  ngOnInit(): void {
+    customInitFunctions();
+  }
 
 
-}
 
 }
