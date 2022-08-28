@@ -6,6 +6,7 @@ import { LoginForm } from '../interface/login.form.interface';
 import { tap, take, map, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { Usuario } from '../models/usuario.model';
 
 declare const google:any;
 
@@ -19,8 +20,17 @@ const base_url=environment.base_url;
 })
 export class UsuarioService {
 
+  public usuario:Usuario
+
   constructor(private http:HttpClient, private router:Router, private ngZone:NgZone, ) { 
     this.googleinit(); 
+  }
+
+  get token(){
+    return localStorage.getItem('token')||'';
+  }
+  get uid(){
+    return this.usuario.uid || '';
   }
 
 
@@ -45,38 +55,38 @@ export class UsuarioService {
 
   
   logout(){
-    localStorage.removeItem('token');
+  
+   
     const emailGoogle=localStorage.getItem('email');
+    localStorage.removeItem('email')
+    localStorage.removeItem('token');
      google.accounts.id.revoke(emailGoogle,()=>{
+
       this.ngZone.run(()=>{
        this.router.navigateByUrl('/login')
-       localStorage.removeItem('email')
+     
       })
     }) 
 
     
   }
 
-/* 
-  , ()=>{
-    this.ngZone.run(()=>{
-      window.location.reload()
-     this.router.navigateByUrl('/login')
-    })
-  }) */
+
   validarToken():Observable<boolean>{
      
-    const token=localStorage.getItem('token') || '';
+   
   
     return this.http.get(`${base_url}/login/renew`,{
       headers:{
-        'x-token':token
+        'x-token':this.token
       }
     }).pipe(
-      tap((resp:any)=>{
-          localStorage.setItem('token', resp.token)
+      map((resp:any)=>{
+        const{nombre, email, img='', google, role, uid}=resp.usuario;
+        this.usuario=new Usuario(nombre, email,'',img,google,role,uid)
+        localStorage.setItem('token', resp.token) 
+        return true;
       }),
-      map(resp=>true),
       catchError(error=>of(false))
     )
   }
@@ -96,6 +106,21 @@ export class UsuarioService {
         localStorage.setItem('token', res.token);
       })
     )
+  }
+
+
+  actualizarPerfil(data:{email:string, nombre:string, role:string}){
+
+    data={
+      ...data,
+      role:this.usuario.role
+    }
+
+       return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
+          headers:{
+            'x-token':this.token
+          }
+        });
   }
 
 

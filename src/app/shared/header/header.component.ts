@@ -2,6 +2,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,14 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class HeaderComponent{
 
-  constructor(private router:Router, private usuariosService:UsuarioService) { }
+  public usuario:Usuario
+
+  constructor( private usuariosService:UsuarioService) { 
+
+      this.usuario=usuariosService.usuario;
+  
+  }
+
 
 
   logout(){
