@@ -37,7 +37,7 @@ export class PerfilComponent implements OnInit {
       const {nombre, email}=this.perfilForm.value;
       this.usuario.nombre=nombre;
       this.usuario.email=email;
-      console.log(nombre, email)
+
     })
   }
 
@@ -47,7 +47,7 @@ export class PerfilComponent implements OnInit {
 
   subirImagen(){
     this.fileUploadService.actualizarFoto(this.imagenSubir, 'usuarios', this.usuario.uid).then(resp=>{
-      console.log(resp)
+      this.usuario.img=resp;
     })
   }
 
