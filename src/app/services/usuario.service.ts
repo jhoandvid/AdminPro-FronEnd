@@ -81,6 +81,8 @@ export class UsuarioService {
         'x-token':this.token
       }
     }).pipe(
+
+        
       map((resp:any)=>{
         const{nombre, email, img='', google, role, uid}=resp.usuario;
         this.usuario=new Usuario(nombre, email,'',img,google,role,uid)

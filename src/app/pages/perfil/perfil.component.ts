@@ -37,6 +37,7 @@ export class PerfilComponent implements OnInit {
       const {nombre, email}=this.perfilForm.value;
       this.usuario.nombre=nombre;
       this.usuario.email=email;
+      console.log(nombre, email)
     })
   }
 
