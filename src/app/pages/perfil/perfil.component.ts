@@ -15,6 +15,7 @@ export class PerfilComponent implements OnInit {
   public perfilForm:FormGroup;
   public usuario:Usuario;
   public imagenSubir:File;
+  public imgTemp:any=null;
 
   constructor(private fb:FormBuilder, private usuarioService:UsuarioService, private fileUploadService:FileUploadService) {
 
@@ -43,6 +44,20 @@ export class PerfilComponent implements OnInit {
 
   cambiarImagen(event:any){
     this.imagenSubir=event.files[0];
+
+    if(!event.files[0]){
+      return this.imgTemp=null;
+    }
+
+    const reader=new FileReader();
+    reader.readAsDataURL(event.files[0]);
+
+    reader.onloadend=()=>{
+
+      this.imgTemp=reader.result;
+      console.log(reader.result);
+    }
+
   }
 
   subirImagen(){
