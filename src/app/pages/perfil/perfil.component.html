@@ -16,7 +16,7 @@
                         <label for="exampleInputEmail1">Email address</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="ti-email"></i></div>
-                            <input type="email" class="form-control"  placeholder="Email" formControlName="email" id="exampleInputEmail1" placeholder="Enter email">
+                            <input type="email" class="form-control" [readonly]="usuario.google" placeholder="Email" formControlName="email" id="exampleInputEmail1" placeholder="Enter email">
                         </div>
                     </div>
                     <button [disabled]="perfilForm.invalid" type="submit" class="btn btn-success  waves-effect waves-light m-r-10">
