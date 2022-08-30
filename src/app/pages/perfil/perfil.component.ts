@@ -4,6 +4,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { Subscription } from 'rxjs';
 import { Usuario } from '../../models/usuario.model';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
@@ -34,12 +35,26 @@ export class PerfilComponent implements OnInit {
   }
 
   actualizarPerfil(){
-    this.usuarioService.actualizarPerfil(this.perfilForm.value).subscribe(()=>{
-      const {nombre, email}=this.perfilForm.value;
-      this.usuario.nombre=nombre;
-      this.usuario.email=email;
+    this.usuarioService.actualizarPerfil(this.perfilForm.value).subscribe({
+      
+      next:()=>{
+        const {nombre, email}=this.perfilForm.value;
+        this.usuario.nombre=nombre;
+        this.usuario.email=email;
+  
+        Swal.fire("Guardado", "Los datos se han guardado correctamente", 'success')
+        
+      },
 
-    })
+      error:(e)=>{
+      
+        console.log(e);
+        Swal.fire("Error", e.error.msg , 'error')
+      }
+      
+     
+
+    }, )
   }
 
   cambiarImagen(event:any){
@@ -63,7 +78,12 @@ export class PerfilComponent implements OnInit {
   subirImagen(){
     this.fileUploadService.actualizarFoto(this.imagenSubir, 'usuarios', this.usuario.uid).then(resp=>{
       this.usuario.img=resp;
-    })
+
+      Swal.fire("Guardado", "La imagen se ha actulizado correctamente", 'success')
+
+    }).catch((err)=>{
+      Swal.fire("Error", "No se pudo subir la imagen", 'error')
+    });
   }
 
 }
