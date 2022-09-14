@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { RegisterForm } from '../interface/register-form.interface';
 import { environment } from '../../environments/environment';
 import { LoginForm } from '../interface/login.form.interface';
-import { tap, take, map, catchError } from 'rxjs/operators';
+import { tap, take, map, catchError, delay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
+import { CargarUsuario } from '../interface/cargar-usuarios.interfaces';
 
 declare const google:any;
 
@@ -31,6 +32,14 @@ export class UsuarioService {
   }
   get uid(){
     return this.usuario.uid || '';
+  }
+
+  get headers(){
+    return {
+      headers:{
+        'x-token':this.token
+      }
+    }
   }
 
 
@@ -113,17 +122,13 @@ export class UsuarioService {
 
   actualizarPerfil(data:{email:string, nombre:string, role:string}){
 
-    data={
-      ...data,
-      role:this.usuario.role
-    }
-
-       return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
-          headers:{
-            'x-token':this.token
-          }
-        });
+       return this.http.put(`${base_url}/usuarios/${this.uid}`, data,this.headers);
   }
+
+  guardarUsuario(usuario:Usuario){
+    console.log(usuario);
+    return this.http.put(`${base_url}/usuarios/${usuario.uid}/role`, usuario,this.headers);
+}
 
 
   loginGoogle(token:string){
@@ -136,4 +141,28 @@ export class UsuarioService {
       })
     )
   }
+
+  cargarUsuarios(desde:number=0){
+      return this.http.get<CargarUsuario>(`${base_url}/usuarios?desde=${desde}`, this.headers).pipe(
+      // delay(5000),
+        map(resp=>{
+          const usuarios=resp.usuarios.map(user=>new Usuario(user.nombre, user.email, '',
+           user.img,  user.google, user.role, user.uid ));
+        
+          return {
+            total:resp.total,
+            usuarios 
+          }
+        })
+      )
+  }
+
+
+  eliminarUsuarios(usuario:Usuario){
+
+    return this.http.delete(`${base_url}/usuarios/${usuario.uid}`, this.headers); 
+  }
+
+  
+
 }

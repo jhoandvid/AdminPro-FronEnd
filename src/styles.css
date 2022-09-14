@@ -14,3 +14,17 @@
     margin-bottom: 10px;
 
 }
+
+.w100{
+    width: 100px;
+}
+
+.w140{
+    width: 149px;
+}
+
+.avatar{
+    width: 50px;
+    border-radius: 100%;
+    border: 1px solid black;
+}
