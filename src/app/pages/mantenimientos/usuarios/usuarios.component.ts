@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from '../../../models/usuario.model';
 import { BusquedasService } from 'src/app/services/busquedas.service';
 import Swal from 'sweetalert2';
-import { identifierName } from '@angular/compiler';
-import { ThemeService } from 'ng2-charts';
+import { ModalImagenService } from '../../../services/modal-imagen.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,26 +12,32 @@ import { ThemeService } from 'ng2-charts';
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
-export class UsuariosComponent implements OnInit {
-
-
-
+export class UsuariosComponent implements OnInit, OnDestroy {
   public usuarios:Usuario[]=[];
   public totalUsuarios:number=0;
   public usuarioTemp=[];
+  
+  public imgSubs:Subscription;
   public desde:number=0;
   public cargando:boolean=true;
   public ocultarSiguiente:boolean=false;
   public ocultarAnterior:boolean=true;
 
-  constructor(private usuarioService:UsuarioService, private busquedasService:BusquedasService) { 
+  constructor(private usuarioService:UsuarioService, private busquedasService:BusquedasService,
+        private modalImagenService:ModalImagenService) { 
 
 
 
   }
+  ngOnDestroy(): void {
+    this.imgSubs.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.CargarUsuarios();
+    this.imgSubs=this.modalImagenService.nuevaImagen.subscribe(img=>{
+      this.CargarUsuarios();
+    })
   
   }
 
@@ -115,6 +121,11 @@ export class UsuariosComponent implements OnInit {
       this.usuarioService.guardarUsuario(usuario).subscribe(resp=>{
         console.log(resp)
       })
+    }
+
+
+    abrirModal(usuario:Usuario){
+      this.modalImagenService.abrirModal('usuarios', usuario.uid, usuario.img);
     }
 
 
