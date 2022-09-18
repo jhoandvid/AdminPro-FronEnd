@@ -83,8 +83,6 @@ export class UsuarioService {
 
   validarToken():Observable<boolean>{
      
-   
-  
     return this.http.get(`${base_url}/login/renew`,{
       headers:{
         'x-token':this.token
