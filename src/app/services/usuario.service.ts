@@ -142,7 +142,7 @@ export class UsuarioService {
 
   cargarUsuarios(desde:number=0){
       return this.http.get<CargarUsuario>(`${base_url}/usuarios?desde=${desde}`, this.headers).pipe(
-      // delay(5000),
+     
         map(resp=>{
           const usuarios=resp.usuarios.map(user=>new Usuario(user.nombre, user.email, '',
            user.img,  user.google, user.role, user.uid ));
