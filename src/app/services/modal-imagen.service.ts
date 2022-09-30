@@ -26,13 +26,14 @@ export class ModalImagenService {
 
 
   abrirModal(tipo:'usuarios'|'medicos'|'hospitales', id:string, img='no-img'){
+    
     this._ocultarModal=false;
     this.tipo=tipo;
     this.id=id;
     if(img.includes('https')){
       this.img=img;
     }else {
-        this.img=`${base_url}/upload/${tipo}/${img}`
+       this.img=`${base_url}/upload/${tipo}/${img}`
     }
 
   }

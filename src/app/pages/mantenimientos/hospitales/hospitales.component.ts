@@ -4,6 +4,7 @@ import { HospitalService } from 'src/app/services/hospital.service';
 import Swal from 'sweetalert2';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
 import { Subscription } from 'rxjs';
+import { BusquedasService } from 'src/app/services/busquedas.service';
 
 @Component({
   selector: 'app-hospitales',
@@ -16,20 +17,25 @@ export class HospitalesComponent implements OnInit, OnDestroy {
   public totalHospitales:number;
   public desde:number=0;
   public imgSubs:Subscription;
+  public hospitalesTemps=[];
   public cargando=true;
   public ocultarSiguiente:boolean=false;
   public ocultarAnterior:boolean=true;
 
   constructor(private hospitalService:HospitalService, private modalImagenService:ModalImagenService
-    ) { }
-  ngOnDestroy(): void {
-    this.imgSubs;
+   , private busquedasServices:BusquedasService ) { }
+ 
+ 
+   ngOnDestroy(): void {
+    this.imgSubs.unsubscribe();
   }
+  
+
 
   ngOnInit(): void {
     this.cargarHospitales();
 
-    this.imgSubs=this.modalImagenService.nuevaImagen.subscribe(resp=>{
+    this.imgSubs=this.imgSubs=this.modalImagenService.nuevaImagen.subscribe(resp=>{
       this.cargarHospitales();
     })
   }
@@ -37,11 +43,12 @@ export class HospitalesComponent implements OnInit, OnDestroy {
 
   cargarHospitales(){
     this.cargando=true;
-    this.hospitalService.cargarHospitales(this.desde).subscribe(({hospitales, total})=>{
+    this.hospitalService.cargarHospitales(this.desde, 5).subscribe(({hospitales, total})=>{
 
 
 
     this.hospitales=hospitales;
+    this.hospitalesTemps=hospitales;
       this.totalHospitales=total; 
       this.cargando=false;
       
@@ -88,7 +95,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
           this.hospitalService.deleteHospital(hospital._id).subscribe(resp=>{
             Swal.fire(
               'Usuario borrado!',
-              `${hospital.nombre} fue eliminado  correctamente`,
+              `${hospital.nombre} fue eliminado correctamente`,
               'success'
 
             );
@@ -102,7 +109,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
   }
 
   async abrirSweetAlert(){
-    const {value} = await Swal.fire<string>({
+    const {value=""} = await Swal.fire<string>({
       title:'Crear hospital',
       text:'Ingrese el nombre del nuevo hospital',
       input: 'text',
@@ -122,9 +129,23 @@ export class HospitalesComponent implements OnInit, OnDestroy {
   }
 
   abrirModal(hospital:Hospital){
-    console.log(hospital)
     this.modalImagenService.abrirModal('hospitales', hospital._id, hospital.img);
+  }
+
+
+  buscar(termino:string){
+    if(termino.length===0){
+      return this.hospitales=this.hospitalesTemps;
+    }
+
+    this.busquedasServices.buscar("hospitales", termino).subscribe(resultados=>{
+      this.hospitales=resultados;
+     
+    })
+
     
+
+
   }
 
 

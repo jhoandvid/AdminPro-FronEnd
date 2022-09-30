@@ -23,6 +23,10 @@
     width: 149px;
 }
 
+.w200{
+    width: 200px;
+}
+
 .avatar{
     width: 50px;
     border-radius: 100%;

@@ -24,8 +24,8 @@ export class HospitalService {
     }
   }
 
-  cargarHospitales(desde:number){
-    return this.http.get(`${baseUrl}/hospitales?desde=${desde}`, this.headers).pipe(
+  cargarHospitales(desde:number, limit:number=0){
+    return this.http.get(`${baseUrl}/hospitales?limit=${limit}&desde=${desde}`, this.headers).pipe(
 
       map((resp:{ok:boolean, hospitales:Hospital[], total:number})=>resp)
 
