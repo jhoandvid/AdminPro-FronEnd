@@ -57,15 +57,18 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.desde+=valor;
 
 
-    if(this.desde <= 0){
+    if(this.desde < 0){
       this.ocultarAnterior=true;
       this.desde=0;
-    }else if(this.desde>=this.totalUsuarios){
+    }else if(this.desde>this.totalUsuarios){
+  
       this.ocultarSiguiente=true;
+      this.ocultarAnterior=false;
       this.desde-=valor;
     }else{
       this.ocultarSiguiente=false;
     }
+
 
     this.CargarUsuarios();
   }
