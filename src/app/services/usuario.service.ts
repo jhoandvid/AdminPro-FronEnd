@@ -14,6 +14,8 @@ declare const google:any;
 const base_url=environment.base_url;
 
 
+
+
  
 
 @Injectable({
@@ -34,7 +36,14 @@ export class UsuarioService {
     return this.usuario.uid || '';
   }
 
+  get role():'ADMIN_ROLE' | 'USER_ROLE'{
+      return this.usuario.role;
+  }
+
+
+
   get headers(){
+
     return {
       headers:{
         'x-token':this.token
@@ -62,18 +71,25 @@ export class UsuarioService {
       });
   }
 
+
+  guardarLocalStorage(resp:any){
+        localStorage.setItem('token', resp.token ); 
+        localStorage.setItem('menu',  JSON.stringify(resp.menu) );
+  }
+
   
   logout(){
+
+    //TODO: Borrar Menu
   
    
     const emailGoogle=localStorage.getItem('email');
-    localStorage.removeItem('email')
+    localStorage.removeItem('email');
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
      google.accounts.id.revoke(emailGoogle,()=>{
-
       this.ngZone.run(()=>{
        this.router.navigateByUrl('/login')
-     
       })
     }) 
 
@@ -93,7 +109,7 @@ export class UsuarioService {
       map((resp:any)=>{
         const{nombre, email, img='', google, role, uid}=resp.usuario;
         this.usuario=new Usuario(nombre, email,'',img,google,role,uid)
-        localStorage.setItem('token', resp.token) 
+        this.guardarLocalStorage(resp);
         return true;
       }),
       catchError(error=>of(false))
@@ -104,7 +120,7 @@ export class UsuarioService {
   crearUsuario(formData:RegisterForm){
     return this.http.post(`${ base_url }/usuarios`, formData).pipe(
       tap((res:any)=>{
-        localStorage.setItem("token", res.token);
+        this.guardarLocalStorage(res);
       })
     )
   }
@@ -112,13 +128,18 @@ export class UsuarioService {
   loginUsuario(formData:LoginForm){
     return this.http.post(`${ base_url }/login`, formData).pipe(
       tap((res:any)=>{
-        localStorage.setItem('token', res.token);
+        this.guardarLocalStorage(res);
       })
     )
   }
 
 
   actualizarPerfil(data:{email:string, nombre:string, role:string}){
+
+    data={
+      ...data,
+      role:this.usuario.role
+    }
 
        return this.http.put(`${base_url}/usuarios/${this.uid}`, data,this.headers);
   }
@@ -134,8 +155,8 @@ export class UsuarioService {
     .pipe(
       tap((resp:any)=>{
        /*  emailGoogle=resp.email; */
-          localStorage.setItem('token', resp.token)
-          localStorage.setItem('email', resp.email)
+       localStorage.setItem("email", resp.email);
+       this.guardarLocalStorage(resp);
       })
     )
   }

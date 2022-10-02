@@ -14,13 +14,20 @@ export class HeaderComponent{
 
   public usuario:Usuario
 
-  constructor( private usuariosService:UsuarioService) { 
+  constructor( private usuariosService:UsuarioService, private router:Router) { 
 
       this.usuario=usuariosService.usuario;
   
   }
 
 
+  buscar(termino:string){
+    if(termino.length===0){
+      return;
+    }
+    console.log(termino)
+    this.router.navigateByUrl(`/dashboard/buscar/${termino}`);
+  }
 
   logout(){
     this.usuariosService.logout();

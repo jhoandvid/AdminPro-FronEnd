@@ -37,6 +37,10 @@ private transformarUsuario(resultados:any[]):Usuario[]{
   return resultados.map(user=>new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid));
 }
 
+buquedaGlobal(termino:string){
+  return this.http.get(`${base_url}/todo/${termino}`, this.headers);
+}
+
 
   buscar(tipo:'usuarios' | 'medicos' |'hospitales', termino:string){
     return this.http.get<any[]>(`${base_url}/todo/coleccion/${tipo}/${termino}`, this.headers)

@@ -13,6 +13,8 @@ import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component'
 import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
 import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
 import { MedicoComponent } from './mantenimientos/medicos/medico.component';
+import { BusquedaComponent } from './busqueda/busqueda.component';
+import { AdminGuard } from '../guards/admin.guard';
 
 
 
@@ -62,12 +64,19 @@ const routes: Routes = [
             component:PerfilComponent,
             data:{titulo:'Pérfil'}
           },
-
+          {
+            path:'buscar/:termino',
+            component:BusquedaComponent,
+            data:{titulo:'Busqueda'}
+          },
 
           //Mantenimiento
 
+
+          //Ruta admin
           {
             path:'usuarios',
+            canActivate:[AdminGuard],
             component:UsuariosComponent,
             data:{titulo:'Usuarios de mantenimiento'}
           },
@@ -86,7 +95,8 @@ const routes: Routes = [
             path:'medico/:id',
             component:MedicoComponent,
             data:{titulo:'Mantenimiento de medico'}
-          }
+          },
+        
 
 
         ]
